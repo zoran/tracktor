@@ -50,7 +50,7 @@ private
     headers["Accept-Charset"] = "utf-8"
     headers["X-Frame-Options"] = "DENY"
     headers["Access-Control-Allow-Methods"] = "OPTIONS, POST"
-    headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    headers["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
 
     # Enable this for HTTPS
     #headers["Strict-Transport-Security"] = "max-age=31536000;
