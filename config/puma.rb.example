@@ -1,0 +1,17 @@
+# This config is only used for environment and testing
+
+pidfile "tmp/pids/puma.pid"
+state_path "tmp/pids/puma.state"
+tag "Spotars Tracktor - Development"
+environment ENV.fetch("RAILS_ENV") { "development" }
+
+# HTTP
+bind "tcp://127.0.0.1:3000"
+
+# HTTPS
+#ssl_bind "127.0.0.1", 3000, { key: "/home/zoran/ssl/private.key", cert: "/home/zoran/ssl/private.crt" }
+
+activate_control_app "tcp://127.0.0.1:9293", no_token: true
+threads 2,4
+workers 2
+worker_timeout 30

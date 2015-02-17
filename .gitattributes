@@ -1,0 +1,11 @@
+.git export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.envrc export-ignore
+Capfile export-ignore
+config/deploy.rb export-ignore
+config/puma.rb.example export-ignore
+config/puma/ export-ignore
+test/ export-ignore
+config/deploy/ export-ignore
+lib/capistrano/ export-ignore

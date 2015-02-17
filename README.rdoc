@@ -1,0 +1,86 @@
+= Spotars - Tracktor Server
+
+
+
+== Run the application
+=== Dev settings
+Add this to your /etc/hosts
+   127.0.0.1 localhost tracktor.spotars.lan
+
+=== Create a self-signed certificate (optional)
+Common Name (e.g. server FQDN or YOUR name) []: tracktor.spotars.lan
+   mkdir -p ~/ssl \
+     && openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+       -keyout ~/ssl/private.key \
+       -out ~/ssl/private.crt
+
+   chmod 400 ~/ssl/private.key
+
+=== bundle config
+   cd /root/of/this/project
+   mkdir -p .bundle
+
+   cat > .bundle/config << "EOF"
+   ---
+   BUNDLE_DISABLE_SHARED_GEMS: '1'
+   BUNDLE_JOBS: '2'
+   EOF
+
+   bundle && spring stop
+
+=== Database
+   rake db:create && rake db:migrate
+
+=== .envrc (optional)
+   echo "export PATH=$PWD/bin:$PATH" > .envrc && direnv allow .
+
+=== start / stop server
+* Create tmp dirs
+   mkdir -p tmp/pids tmp/sockets
+* Create a config/puma.rb see config/puma.rb.example
+   pumactl -Stmp/pids/puma.state -Ptmp/pids/puma.pid -F config/puma.rb start
+
+=== Tests
+   rake test
+   test:units
+   test:integration
+
+==== curl
+   for i in {1..100}
+   do
+     curl -v -H"Accept: application/vnd.spotars.tracktor.v1+json" \
+         -H"Content-Type: application/json" \
+         -d '{ "location":{"longitude":"10",
+           "latitude":"50",
+           "bearing":"360.1",
+           "recorded_at":"2015-01-29T15:49Z" },
+           "user_id":"23",
+           "tracktor_api_ver":" v1 "}' \
+        "http://tracktor.spotars.lan:3000/locations" &> /dev/null
+   done
+
+==== ab
+   echo '{ "location":{
+       "longitude":"10",
+       "latitude":"50",
+       "bearing":"360.1",
+       "recorded_at":"2015-01-29T15:49Z"},
+       "user_id":"23",
+       "tracktor_api_ver":"v1" }' > /tmp/postfile
+
+   ab -n1000 -c4 -s15 \
+       -T"application/json" \
+       -H"Accept: application/vnd.spotars.tracktor.v1+json" \
+       -p /tmp/postfile \
+       http://tracktor.spotars.lan:3000/locations
+
+=== Coverage
+   spring stop && COVERAGE=true rake test && spring stop
+Open test/coverage/index.html in a browser.
+
+
+
+== Deploy
+=== Execute deploy on local development machine
+   bundle exec cap staging deploy --trace
+

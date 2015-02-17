@@ -1,0 +1,30 @@
+global: &global
+  adapter: postgis
+  postgis_extension: postgis
+  schema_search_path: public, postgis, topology
+  encoding: unicode
+  pool: 5
+  port: 5432
+
+development:
+  <<: *global
+  host: localhost
+  username: dev
+  database: tracktor_development
+  min_messages: log
+
+test: &test
+  <<: *global
+  host: localhost
+  username: dev
+  database: tracktor_test
+  min_messages: log
+
+staging:
+  <<: *global
+  pool: 140
+  host: <%= Figaro.env.db_main_host %>
+  username: <%= Figaro.env.db_main_user_name %>
+  password: <%= Figaro.env.db_main_password %>
+  database: main
+  min_messages: log

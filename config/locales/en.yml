@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      location: "Location"
+    attributes:
+      location:
+        bearing: "Bearing"
+        location: "Location"
+    errors:
+      models:
+        location:
+          attributes:
+            bearing:
+              valid: "is invalid"
+            location:
+              valid: "has invalid longitude or latitude"
