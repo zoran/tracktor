@@ -5,7 +5,7 @@ state_path "/home/tracktor/apps/tracktor_staging/shared/tmp/pids/puma.state"
 stdout_redirect '/home/tracktor/apps/tracktor_staging/shared/log/puma_access.log', '/home/tracktor/apps/tracktor_staging/shared/log/puma_error.log', true
 pidfile "/home/tracktor/apps/tracktor_staging/shared/tmp/pids/puma.pid"
 tag "Spotars Tracktor Server - Staging"
-bind "tcp://tracktor-stag-1.spotars.com:8080"
+bind "tcp://tracktor-stag-1.spotars.com:80"
 threads 8,8
 workers 2
 daemonize true
