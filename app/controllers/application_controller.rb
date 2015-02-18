@@ -26,4 +26,10 @@ class ApplicationController < ActionController::Metal
   ActionController::Base.without_modules(*WITHOUT).each do |el|
     include el
   end
+
+  # Delay failures for up to 20ms to thwart timing based attacks
+  def delay
+    sleep SecureRandom.random_number(10)
+  end
 end
+

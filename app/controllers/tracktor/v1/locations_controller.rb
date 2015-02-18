@@ -25,14 +25,17 @@ class Tracktor::V1::LocationsController < ApplicationController
           # cache on the device.
           head 200
         else
+          delay
           head 422
         end
       rescue
         # :nocov:
+        delay
         head 422
         # :nocov:
       end
     else
+      delay
       head 400
     end
   end
@@ -43,7 +46,6 @@ private
     headers["Accept-Encoding"] = "gzip,deflate"
     headers["Accept-Charset"] = "utf-8"
     headers["X-Frame-Options"] = "DENY"
-    headers["Content-Type"] = "application/json; charset=utf-8"
     headers["Access-Control-Allow-Methods"] = "OPTIONS, POST"
     headers["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
 
