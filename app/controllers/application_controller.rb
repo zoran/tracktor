@@ -1,13 +1,14 @@
 class ApplicationController < ActionController::Metal
 
   # Remove unnecessary stuff
+  # We must keep ActionController::ConditionalGet to be able to
+  # respond with "head 200" instead of "render nothing: true, status: 200"
   WITHOUT = [
       AbstractController::Translation,
       AbstractController::AssetPaths,
       ActionController::UrlFor,
       ActionController::Redirecting,
       ActionController::Renderers::All,
-      ActionController::ConditionalGet,
       ActionController::Caching,
       ActionController::MimeResponds,
       ActionController::Cookies,

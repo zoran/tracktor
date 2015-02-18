@@ -1,18 +1,11 @@
 class Tracktor::V1::LocationsController < ApplicationController
 
-  # This is an API and we don't want run into
-  #   "Can't verify CSRF token authenticity"
-  skip_before_filter :verify_authenticity_token, only: [:options, :create]
-
-  before_filter :set_access_control_headers,
-      :parse_request
+  before_filter :set_access_control_headers, :parse_request
 
   def options
     render nothing: true
   end
 
-  # We don't have to care about strong parameters
-  # here since we assign attributes directly.
   def create
     if processible_post?
       @location = Location.new(tracktor_api_subdomain: params["subdomain"],
@@ -30,25 +23,27 @@ class Tracktor::V1::LocationsController < ApplicationController
           # as the device gets an network connection and its able to post to the API it
           # expects a status code 200 which will trigger the plugin to clear the
           # cache on the device.
-          render nothing: true, status: 200
+          head 200
         else
-          render json: { errors: @location.errors }, status: 422
+          head 422
         end
       rescue
-        render nothing: true, status: 422
+        # :nocov:
+        head 422
+        # :nocov:
       end
     else
-      render nothing: true, status: 400
+      head 400
     end
   end
 
 private
 
-  # Don't use line breaks here
   def set_access_control_headers
     headers["Accept-Encoding"] = "gzip,deflate"
     headers["Accept-Charset"] = "utf-8"
     headers["X-Frame-Options"] = "DENY"
+    headers["Content-Type"] = "application/json; charset=utf-8"
     headers["Access-Control-Allow-Methods"] = "OPTIONS, POST"
     headers["Access-Control-Allow-Headers"] = "Origin, Content-Type, Accept, Authorization"
 
@@ -61,8 +56,7 @@ private
 
   # Recursively check values and turn them into stripped strings
   def parse_request
-    @request_body = JSON.parse(request.body.read)
-        .deep_symbolize_keys rescue nil
+    @request_body = JSON.parse(request.body.read).deep_symbolize_keys rescue nil
   end
 
   # Quick presence validation of mandatory attributes here allows
@@ -78,8 +72,7 @@ private
   end
 
   def build_gis_point
-    "POINT(#{@request_body[:location][:longitude]}
-        #{@request_body[:location][:latitude]})"
+    "POINT(#{@request_body[:location][:longitude]} #{@request_body[:location][:latitude]})"
   end
 
   def get_api_version
