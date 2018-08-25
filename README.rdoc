@@ -1,4 +1,4 @@
-= Spotars - Tracktor Server
+= Tracktor Server
 
 
 
